@@ -29,8 +29,8 @@ class CMTopK:
         self.minTopKArray = sys.maxsize
 
     def update(self, record):
-        self.cm.update(record)
         song_id = record[2]
+        self.cm.update(song_id)
         if song_id in self.top_k_set:
             return
 

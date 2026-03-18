@@ -36,7 +36,40 @@ class DataGeneration:
         for i in range(self.size):
             self.data[i] = self._generate_row(i)
 
-    def generate_data_approximate(self, sketch):
+    def plot_distributions(self):
+        import matplotlib.pyplot as plt
+
+        plt.figure(figsize=(12, 8))
+
+        plt.subplot(2, 2, 1)
+        plt.hist(self.data[:, 1], bins=50, color='blue', alpha=0.7)
+        plt.title('User ID Distribution')
+        plt.xlabel('User ID')
+        plt.ylabel('Frequency')
+
+        plt.subplot(2, 2, 2)
+        plt.hist(self.data[:, 2], bins=50, color='orange', alpha=0.7)
+        plt.title('Song ID Distribution')
+        plt.xlabel('Song ID')
+        plt.ylabel('Frequency')
+
+        plt.subplot(2, 2, 3)
+        plt.hist(self.data[:, 3], bins=50, color='green', alpha=0.7)
+        plt.title('Artist ID Distribution')
+        plt.xlabel('Artist ID')
+        plt.ylabel('Frequency')
+
+        plt.subplot(2, 2, 4)
+        plt.hist(self.data[:, 4], bins=50, color='red', alpha=0.7)
+        plt.title('Label ID Distribution')
+        plt.xlabel('Label ID')
+        plt.ylabel('Frequency')
+
+        plt.tight_layout()
+        plt.show()
+
+
+    def ingest_data_into_sketch(self, sketch):
         for row in self.data:
             sketch.update(row)
 

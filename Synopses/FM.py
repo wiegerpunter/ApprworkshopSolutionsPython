@@ -4,20 +4,21 @@ import math
 import mmh3
 
 
-def _hash(seed, song_id, user_id):
-    hash_key = (song_id * 0x1F1F1F1F) ^ (user_id * 0x7F7F7F7F)
+def _hash(seed, hash_key):
     return mmh3.hash64(hash_key, seed, signed=False)[0]
-    #
-    # hash_obj = hashlib.md5(f"{seed}{hash_key}".encode())
-    # return int(hash_obj.hexdigest(), 16) % (2**31)
+
+
+def _comp_hashkey(song_id, user_id):
+    return (song_id << 32) | user_id
 
 
 class FM:
     def __init__(self, epsilon, delta):
-        num_hashes = math.ceil(math.log(1 / delta) / math.log(2) / (epsilon ** 2))
-        print("Num hashes: ", num_hashes)
+        self.num_hashes = math.ceil(math.log(1 / delta) / math.log(2) / (epsilon ** 2))
+        print("Num hashes: ", self.num_hashes)
         self.bitmap_size = 64
-        self.sketch = np.zeros((num_hashes, self.bitmap_size), dtype=bool)
+        self.sketch = np.zeros((self.num_hashes, self.bitmap_size), dtype=bool)
+
 
     # def _lsb(self, value):
     #     rho = 0
@@ -31,13 +32,14 @@ class FM:
 
     def update(self, record):
         song_id, user_id = record[1], record[2]
+        comp_hashkey = _comp_hashkey(song_id, user_id)
         for i in range(len(self.sketch)):
-            hash_val = _hash(i, song_id, user_id)
+            hash_val = _hash(i, comp_hashkey)
             self.sketch[i][self._lsb(hash_val)] = True
 
     def query(self):
         R = []
-        for i in range(len(self.sketch)):
+        for i in range(self.num_hashes):
             rho = next((j for j in range(self.bitmap_size) if not self.sketch[i][j]), self.bitmap_size)
             R.append(rho)
 

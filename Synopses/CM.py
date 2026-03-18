@@ -13,8 +13,7 @@ class CountMin:
     def _hash(self, seed, value):
         return mmh3.hash(str(value), seed, False) % self.width
 
-    def update(self, record):
-        song_id = record[2]
+    def update(self, song_id):
         for i in range(self.depth):
             index = self._hash(i, song_id)
             self.cm[i][index] += 1
