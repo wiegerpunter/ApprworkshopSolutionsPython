@@ -11,5 +11,3 @@ To install the libraries, run the following command:
 ```bash
 pip install -r requirements.txt
 ```
-
-Students are expected to 
