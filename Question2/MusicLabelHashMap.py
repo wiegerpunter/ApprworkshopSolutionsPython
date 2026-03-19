@@ -1,4 +1,4 @@
-from Synopses.FM import FM
+from Question2.FM import FM
 
 
 class MusicLabelHashMap:
